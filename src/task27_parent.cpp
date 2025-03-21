@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <mpi.h>
+#include <iostream>
 
 int main(int argc, char *argv[]) {
     int rank, size, n;
@@ -11,7 +12,8 @@ int main(int argc, char *argv[]) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     if (rank == 0) {
-        scanf("%d", &n);
+        printf("Enter the number of processes: ");
+        std::cin >> n;
         
         MPI_Comm_spawn("executable/task27_child.exe", MPI_ARGV_NULL, n, MPI_INFO_NULL, 0, MPI_COMM_WORLD, &intercomm, MPI_ERRCODES_IGNORE);
 
