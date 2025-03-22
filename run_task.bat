@@ -26,7 +26,11 @@ if "%TASK_NAME%"=="" (
 )
 
 :: Компиляция
-g++ src/%TASK_NAME%.cpp -o executable/%TASK_NAME%.exe -I"C:\Program Files (x86)\Microsoft SDKs\MPI\Include" -L"C:\Program Files (x86)\Microsoft SDKs\MPI\Lib\x64" -lmsmpi
+g++ src/%TASK_NAME%.cpp -o executable/%TASK_NAME%.exe ^
+    -I"C:\Program Files (x86)\Microsoft SDKs\MPI\Include" ^
+    -L"C:\Program Files (x86)\Microsoft SDKs\MPI\Lib\x64" ^
+    -lmsmpi ^
+    -fopenmp
 
 :: Запуск с MPI
 mpiexec -n %NUM_PROCESSES% executable/%TASK_NAME%.exe

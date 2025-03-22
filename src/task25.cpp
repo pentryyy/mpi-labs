@@ -16,7 +16,9 @@ void matrix_multiply(
             }
         }
     }
-    MPI_Allreduce(MPI_IN_PLACE, C, n * n, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+
+    MPI_Allreduce(MPI_IN_PLACE, C, n * n, 
+                  MPI_INT, MPI_SUM, MPI_COMM_WORLD);
 }
 
 int main(int argc, char *argv[]) {
@@ -31,15 +33,18 @@ int main(int argc, char *argv[]) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     if (rank == 0) {
-        printf("Enter the size of the matrix (n x n, n <= %d): ", MAX_N);
+        printf("Enter the size of the matrix (n x n, n <= %d): ", 
+               MAX_N);
         std::cin >> n;
 
-        printf("Enter the elements of matrix A (%d x %d):\n", n, n);
+        printf("Enter the elements of matrix A (%d x %d):\n", 
+               n, n);
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++)
                 std::cin >> A[i * n + j];
 
-        printf("Enter the elements of matrix B (%d x %d):\n", n, n);
+        printf("Enter the elements of matrix B (%d x %d):\n", 
+               n, n);
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++)
                 std::cin >> B[i * n + j];

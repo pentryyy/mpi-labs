@@ -1,6 +1,7 @@
 #include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 
 int main(int argc, char *argv[]) {
     int rank, size;
@@ -24,7 +25,12 @@ int main(int argc, char *argv[]) {
                  &message, 1, MPI_INT, prev, 0,  
                  MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
-    printf("[%d]: receive message '%d'\n", rank, message);
+    std::cout << "[" 
+              << rank 
+              << "]: receive message '" 
+              << message 
+              << "'" 
+              << std::endl;
 
     MPI_Finalize();
 

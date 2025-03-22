@@ -15,9 +15,13 @@ int main(int argc, char *argv[]) {
         printf("Enter the number of processes: ");
         std::cin >> n;
         
-        MPI_Comm_spawn("executable/task27_child.exe", MPI_ARGV_NULL, n, MPI_INFO_NULL, 0, MPI_COMM_WORLD, &intercomm, MPI_ERRCODES_IGNORE);
+        MPI_Comm_spawn("executable/task27_child.exe", 
+                       MPI_ARGV_NULL, n, MPI_INFO_NULL, 0, 
+                       MPI_COMM_WORLD, &intercomm, 
+                       MPI_ERRCODES_IGNORE);
 
-        printf("I am %d process from %d processes!\nMy parent is none.\n", rank, size + n);
+        printf("I am %d process from %d processes!\nMy parent is none.\n", 
+               rank, size + n);
     }
 
     MPI_Finalize();

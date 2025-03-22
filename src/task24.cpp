@@ -2,20 +2,20 @@
 #include <stdlib.h>
 #include <mpi.h>
 #include <math.h>
+#include <iostream>
 
 int main(int argc, char *argv[]) {
-    int rank, size;
-    int N;
-    long local_in_circle = 0, total_in_circle = 0;
-    double pi;
-    double start_time, end_time;
+    int    rank, size, N;
+    long   local_in_circle = 0, total_in_circle = 0;
+    double pi, start_time, end_time;
 
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     if (rank == 0) {
-        scanf("%d", &N);
+        printf("Enter a number (calculation accuracy): ");
+        std::cin >> N;
     }
 
     MPI_Bcast(&N, 1, MPI_INT, 0, MPI_COMM_WORLD);

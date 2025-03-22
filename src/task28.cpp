@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <mpi.h>
 #include <math.h>
+#include <iostream>
 
 double compute_pi(int N) {
     int count = 0;
@@ -26,7 +27,8 @@ int main(int argc, char* argv[]) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     if (rank == 0) {
-        scanf("%d", &N);
+        printf("Enter a number (calculation accuracy): ");
+        std::cin >> N;
     }
 
     MPI_Bcast(&N, 1, MPI_INT, 0, MPI_COMM_WORLD);
@@ -38,16 +40,21 @@ int main(int argc, char* argv[]) {
         global_pi = local_pi;
         double temp_pi;
         for (int i = 1; i < size; i++) {
-            MPI_Recv(&temp_pi, 1, MPI_DOUBLE, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            MPI_Recv(&temp_pi, 1, MPI_DOUBLE, 
+                     i, 0, MPI_COMM_WORLD, 
+                     MPI_STATUS_IGNORE);
             global_pi += temp_pi;
         }
         global_pi /= size;
         end_time = MPI_Wtime();
 
-        printf("Calculated pi: %.8f\n", global_pi);
-        printf("Execution Time: %.6f seconds\n", end_time - start_time);
+        printf("Calculated pi: %.8f\n", 
+               global_pi);
+        printf("Execution Time: %.6f seconds\n", 
+               end_time - start_time);
     } else {
-        MPI_Send(&local_pi, 1, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
+        MPI_Send(&local_pi, 1, 
+                 MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
     }
 
     MPI_Finalize();

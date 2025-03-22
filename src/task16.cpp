@@ -9,11 +9,19 @@ int main(int argc, char* argv[]) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     if (rank == 0) {
-        std::cout << size << " processes." << std::endl;
+        std::cout << size 
+                  << " processes." 
+                  << std::endl;
     } else if (rank % 2 == 0) {
-        std::cout << "I am " << rank << " process: FIRST!" << std::endl;
+        std::cout << "I am " 
+                  << rank 
+                  << " process: FIRST!" 
+                  << std::endl;
     } else {
-        std::cout << "I am " << rank << " process: SECOND!" << std::endl;
+        std::cout << "I am " 
+                  << rank 
+                  << " process: SECOND!" 
+                  << std::endl;
     }
 
     MPI_Finalize();

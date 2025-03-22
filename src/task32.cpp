@@ -2,6 +2,7 @@
 #include <omp.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 
 int main(int argc, char *argv[]) {
     int rank, size;
@@ -17,10 +18,13 @@ int main(int argc, char *argv[]) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     if (rank == 0) {
-        if (scanf("%lld", &N) != 1) {
+        printf("Enter a number (calculation accuracy): ");
+        
+        if (!(std::cin >> N)) {
             fprintf(stderr, "Input error.\n");
             MPI_Abort(MPI_COMM_WORLD, 1);
         }
+
         if (N <= 0) {
             fprintf(stderr, "Error: N must be a positive number.\n");
             MPI_Abort(MPI_COMM_WORLD, 1);
@@ -52,8 +56,10 @@ int main(int argc, char *argv[]) {
 
     if (rank == 0) {
         pi = global_sum * step;
-        printf("Calculated pi: %.8f\n", pi);
-        printf("Execution Time: %.6f seconds\n", end_time - start_time);
+        printf("Calculated pi: %.8f\n", 
+               pi);
+        printf("Execution Time: %.6f seconds\n", 
+               end_time - start_time);
     }
 
     MPI_Finalize();

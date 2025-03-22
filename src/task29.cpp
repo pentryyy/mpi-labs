@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <omp.h>
 #include <mpi.h>
+#include <iostream>
 
 double compute_pi(int N) {
     int count = 0;
@@ -29,10 +30,10 @@ int main(int argc, char* argv[]) {
     omp_set_num_threads(threads);
 
     if (rank == 0) {
-        scanf("%d", &N);
-        scanf("%d", &threads);
+        printf("Enter the accuracy and number of threads: ");
+        std::cin >> N >> threads;
     }
-
+    
     MPI_Bcast(&N, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     start_time = MPI_Wtime();
@@ -43,16 +44,21 @@ int main(int argc, char* argv[]) {
         global_pi = local_pi;
         double temp_pi;
         for (int i = 1; i < size; i++) {
-            MPI_Recv(&temp_pi, 1, MPI_DOUBLE, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            MPI_Recv(&temp_pi, 1, 
+                     MPI_DOUBLE, i, 0, MPI_COMM_WORLD, 
+                     MPI_STATUS_IGNORE);
             global_pi += temp_pi;
         }
         global_pi /= size;
         end_time = MPI_Wtime();
 
-        printf("Calculated pi: %.8f\n", global_pi);
-        printf("Execution Time: %.6f seconds\n", end_time - start_time);
+        printf("Calculated pi: %.8f\n", 
+               global_pi);
+        printf("Execution Time: %.6f seconds\n", 
+               end_time - start_time);
     } else {
-        MPI_Send(&local_pi, 1, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
+        MPI_Send(&local_pi, 1, 
+                 MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
     }
 
     MPI_Finalize();

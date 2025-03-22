@@ -1,14 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <mpi.h>
+#include <iostream>
 
 #define ALPHABET_SIZE 26
 
 int main(int argc, char *argv[]) {
-    int rank, size;
-    int n;
+    int rank, size, n, *counts = NULL;
     char *str;
-    int *counts = NULL;
 
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -17,7 +16,9 @@ int main(int argc, char *argv[]) {
     double start_time = MPI_Wtime();
 
     if (rank == 0) {
-        scanf("%d", &n);
+        printf("Enter the number of characters and characters: ");
+        std::cin >> n;
+
         str = (char*) malloc(n * sizeof(char));
         scanf("%s", str);
         counts = (int*) calloc(ALPHABET_SIZE, sizeof(int));
@@ -27,9 +28,11 @@ int main(int argc, char *argv[]) {
             MPI_Send(str, n, MPI_CHAR, i, 0, MPI_COMM_WORLD);
         }
     } else {
-        MPI_Recv(&n, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&n, 1, MPI_INT, 0, 0, 
+                 MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         str = (char*) malloc(n * sizeof(char));
-        MPI_Recv(str, n, MPI_CHAR, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(str, n, MPI_CHAR, 0, 0, 
+                 MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
 
     int local_count[ALPHABET_SIZE] = {0};
@@ -37,7 +40,9 @@ int main(int argc, char *argv[]) {
         local_count[str[i] - 'a']++;
     }
 
-    MPI_Reduce(local_count, counts, ALPHABET_SIZE, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(local_count, counts, 
+               ALPHABET_SIZE, MPI_INT, 
+               MPI_SUM, 0, MPI_COMM_WORLD);
 
     if (rank == 0) {
         for (int i = 0; i < ALPHABET_SIZE; i++) {
@@ -53,7 +58,8 @@ int main(int argc, char *argv[]) {
     double end_time = MPI_Wtime();
 
     if (rank == 0) {
-        printf("Time taken: %f seconds\n", end_time - start_time);
+        printf("Time taken: %f seconds\n", 
+               end_time - start_time);
     }
 
     MPI_Finalize();

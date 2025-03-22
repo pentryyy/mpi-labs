@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <mpi.h>
+#include <iostream>
 
 int main(int argc, char *argv[]) {
     int rank, size;
@@ -13,13 +14,15 @@ int main(int argc, char *argv[]) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     
     if (rank == 0) {
-        scanf("%s", message);
+        printf("Enter a message: ");
+        std::cin >> message;
     }
     
     if (rank % 2 == 0) {
         MPI_Comm_split(MPI_COMM_WORLD, 0, rank, &new_comm);
     } else {
-        MPI_Comm_split(MPI_COMM_WORLD, MPI_UNDEFINED, rank, &new_comm);
+        MPI_Comm_split(MPI_COMM_WORLD, MPI_UNDEFINED, 
+                       rank, &new_comm);
     }
     
     if (rank % 2 == 0) {
@@ -35,8 +38,17 @@ int main(int argc, char *argv[]) {
         new_size = -1;
     }
     
-    printf("MPI_COMM_WORLD: %d from %d. New comm: %d from %d. Message = %s\n", 
-            rank, size, new_rank, new_size, message);
+    std::cout << "MPI_COMM_WORLD: " 
+              << rank 
+              << " from " 
+              << size 
+              << ". New comm: " 
+              << (new_rank == -1 ? "no" : std::to_string(new_rank)) 
+              << " from " 
+              << (new_size == -1 ? "no" : std::to_string(new_size))
+              << ". Message = " 
+              << message
+              << std::endl;
     
     if (rank % 2 == 0) {
         MPI_Comm_free(&new_comm);
